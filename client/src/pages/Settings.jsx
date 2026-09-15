@@ -5,6 +5,7 @@ import { useToast } from '../components/Toast.jsx';
 import { applyTheme, getTheme } from '../utils/theme.js';
 import PhosphorIcon from '../components/PhosphorIcon.jsx';
 import Modal from '../components/Modal.jsx';
+import { UpgradeModalBody } from '../components/PremiumGate.jsx';
 import { useNavigate } from 'react-router-dom';
 
 function SectionHeader({ children }) {
@@ -37,6 +38,7 @@ export default function Settings() {
   const [controlMode, setControlMode] = useState(0);
   const [showCurrencyModal, setShowCurrencyModal] = useState(false);
   const [showTimezoneModal, setShowTimezoneModal] = useState(false);
+  const [showProGate, setShowProGate] = useState(false);
   const [showLimitModal, setShowLimitModal] = useState(false);
   const [limitValue, setLimitValue] = useState('');
   const [notifications, setNotifications] = useState(true);
@@ -310,7 +312,7 @@ export default function Settings() {
           <PhosphorIcon name="caret-right" size={16} style={{ color: '#00B2FE' }} />
         </a>
         <div className="settings-divider" />
-        <a className="settings-item" onClick={(e) => { e.preventDefault(); setShowExportPdfModal(true); }} href="#">
+        <a className="settings-item" onClick={(e) => { e.preventDefault(); if (user?.plan !== 1) { setShowProGate(true); return; } setShowExportPdfModal(true); }} href="#">
           <div className="settings-squircle" style={{ backgroundColor: '#3B233D', color: '#FF4757' }}><PhosphorIcon name="file-pdf" size={20} /></div>
           <div className="flex-grow-1">
             <div className="fw-semibold text-white">Exportar Relatório (PDF)</div>

@@ -4,6 +4,7 @@ const backupService = require('../services/backupService');
 const csvService = require('../services/csvService');
 const recurrenceService = require('../services/recurrenceService');
 const tenantService = require('../services/tenantService');
+const billingService = require('../services/billingService');
 const db = require('../db');
 const { authenticate, resolveTenant } = require('../middleware/auth');
 const { daysInMonth } = require('../utils/dates');
@@ -42,6 +43,11 @@ router.get('/backup.json', async (req, res) => {
 
 router.get('/transactions.pdf', async (req, res) => {
   try {
+    // Relatório PDF é recurso Pro
+    const plan = await billingService.getPlan(req.user.Id);
+    if (plan !== billingService.Plan.Pro) {
+      return res.status(403).json({ error: 'Relatório PDF é um recurso Pro.' });
+    }
     const query = req.query;
     const isAll = String(query.all || '') === 'true';
     const year = parseInt(query.year, 10) || null;

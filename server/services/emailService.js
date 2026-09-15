@@ -4,11 +4,11 @@ const config = require('../config');
 let transporter = null;
 
 function isConfigured() {
-  return Boolean(config.smtp.host);
+  return Boolean(config.smtp.host || config.brevoApiKey);
 }
 
 function getTransporter() {
-  if (!transporter && isConfigured()) {
+  if (!transporter && config.smtp.host) {
     transporter = nodemailer.createTransport({
       host: config.smtp.host,
       port: config.smtp.port,
@@ -24,10 +24,44 @@ function getTransporter() {
   return transporter;
 }
 
+// Envio pela API HTTP do Brevo (HTTPS 443, nunca bloqueado em hospedagens).
+// Usa BREVO_API_KEY (formato xkeysib-...). Mais confiável que SMTP no Render.
+async function sendViaBrevoApi(to, subject, html) {
+  const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'api-key': config.brevoApiKey,
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify({
+      sender: { email: config.smtp.from || config.smtp.user || 'no-reply@bdd.com' },
+      to: [{ email: to }],
+      subject,
+      htmlContent: html,
+    }),
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    throw new Error(`Brevo API ${res.status}: ${body.slice(0, 200)}`);
+  }
+}
+
 async function send(to, subject, html) {
+  if (config.brevoApiKey) {
+    try {
+      await sendViaBrevoApi(to, subject, html);
+      console.log(`[email] enviado (API Brevo) para ${to} | assunto: ${subject}`);
+    } catch (err) {
+      console.error(`[email] ERRO (API Brevo) para ${to}: ${err.message}`);
+      throw err;
+    }
+    return;
+  }
+
   const tr = getTransporter();
   if (!tr) {
-    console.warn(`[email] SMTP não configurado (host vazio) — envio ignorado para ${to}`);
+    console.warn(`[email] SMTP não configurado (sem host nem BREVO_API_KEY) — envio ignorado para ${to}`);
     return;
   }
   try {
@@ -37,9 +71,9 @@ async function send(to, subject, html) {
       subject,
       html,
     });
-    console.log(`[email] enviado para ${to} | assunto: ${subject}`);
+    console.log(`[email] enviado (SMTP) para ${to} | assunto: ${subject}`);
   } catch (err) {
-    console.error(`[email] ERRO ao enviar para ${to}: ${err.message}`);
+    console.error(`[email] ERRO (SMTP) para ${to}: ${err.message}`);
     throw err;
   }
 }

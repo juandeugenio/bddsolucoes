@@ -39,7 +39,7 @@ export default function PremiumGate({ children }) {
   );
 }
 
-function UpgradeModalBody({ user }) {
+export function UpgradeModalBody({ user }) {
   const [copied, setCopied] = useState('');
   const [pix, setPix] = useState({ email: '', copiaECola: '' });
 

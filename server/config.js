@@ -39,6 +39,8 @@ const config = {
     secure: process.env.SMTP_SECURE === 'true',
   },
 
+  brevoApiKey: process.env.BREVO_API_KEY || '',
+
   pix: {
     email: process.env.PIX_EMAIL || '',
     copiaECola: process.env.PIX_COPIA_E_COLA || '',
