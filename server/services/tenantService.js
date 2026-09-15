@@ -181,7 +181,10 @@ async function createInvite(userId, tenantId, email) {
     'SELECT * FROM FinanceTenantInvites WHERE TenantId = ? AND Email = ? AND Status = 0',
     [tenantId, email]
   );
-  if (dup) throw new Error('Já existe um convite pendente para este e-mail.');
+  if (dup) {
+    // Reenvio: revoga o convite pendente anterior e gera um novo (novo link/e-mail)
+    await db.query('UPDATE FinanceTenantInvites SET Status = 2 WHERE Id = ?', [dup.Id]);
+  }
 
   const invite = {
     Id: uid(),
