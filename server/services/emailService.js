@@ -23,13 +23,22 @@ function getTransporter() {
 
 async function send(to, subject, html) {
   const tr = getTransporter();
-  if (!tr) return;
-  await tr.sendMail({
-    from: config.smtp.from,
-    to,
-    subject,
-    html,
-  });
+  if (!tr) {
+    console.warn(`[email] SMTP não configurado (host vazio) — envio ignorado para ${to}`);
+    return;
+  }
+  try {
+    await tr.sendMail({
+      from: config.smtp.from,
+      to,
+      subject,
+      html,
+    });
+    console.log(`[email] enviado para ${to} | assunto: ${subject}`);
+  } catch (err) {
+    console.error(`[email] ERRO ao enviar para ${to}: ${err.message}`);
+    throw err;
+  }
 }
 
 async function sendInviteEmail(to, inviteUrl) {
