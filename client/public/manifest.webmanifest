@@ -1,0 +1,26 @@
+{
+  "name": "BDD Soluções Financeiras",
+  "short_name": "BDD Finanças",
+  "description": "Finanças compartilhadas para o casal",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#130F24",
+  "theme_color": "#9675FF",
+  "lang": "pt-BR",
+  "categories": ["finance", "productivity"],
+  "icons": [
+    {
+      "src": "/images/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

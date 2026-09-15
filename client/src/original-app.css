@@ -1,0 +1,1304 @@
+:root {
+    --bdd-bg: #130F24;
+    --bdd-bg-deep: #0D0A19;
+    --bdd-card: #1D1735;
+    --bdd-card-hover: #261F45;
+    --bdd-primary: #9675FF;
+    --bdd-accent: #22D3EE;
+    --bdd-success: #22C55E;
+    --bdd-danger: #FF5C4D;
+    --bdd-text: #FFFFFF;
+    --bdd-muted: #8C85AA;
+    --bdd-caption: #736D93;
+    --bdd-icon-color: #FFFFFF;
+    --bdd-squircle-bg: #2D234D;
+}
+
+@font-face {
+    font-family: 'DM Sans';
+    src: url('fonts/DMSans-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DM Sans';
+    src: url('fonts/DMSans-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Phosphor';
+    src: url('fonts/Phosphor.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+body {
+    background-color: var(--bdd-bg) !important;
+    color: var(--bdd-text) !important;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--bdd-text);
+}
+
+.text-muted {
+    color: var(--bdd-muted) !important;
+}
+
+.card {
+    background-color: var(--bdd-card) !important;
+    border: none !important;
+    color: var(--bdd-text) !important;
+}
+
+.progress-bar {
+    transition: none !important;
+}
+
+/* ===== Container e Moldura de App Mobile ===== */
+.app-viewport {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--bdd-bg);
+    position: relative;
+    overflow-x: hidden;
+}
+
+.app-main-content {
+    padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+}
+
+/* ===== Bottom Nav (Navegação Inferior Mobile) ===== */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 440px;
+    height: calc(72px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background-color: #130F24;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+
+@media (max-width: 991px) {
+    .bottom-nav {
+        max-width: 100%;
+    }
+}
+
+.bottom-nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    color: #8C85AA;
+    text-decoration: none;
+    font-size: 0.7rem;
+    font-weight: 600;
+    transition: color 0.15s ease;
+}
+
+.bottom-nav a.active {
+    color: #9675FF !important;
+}
+
+.bottom-nav a i, .bottom-nav a svg {
+    font-size: 1.4rem;
+}
+
+/* ===== Botão + FAB Central Elevado ===== */
+.bottom-nav-fab-btn {
+    position: relative;
+    top: -18px;
+    text-decoration: none !important;
+}
+
+.bottom-nav-fab {
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #B59BFF 0%, #7E52FF 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-size: 1.6rem;
+    box-shadow: 0 8px 24px rgba(126, 82, 255, 0.5);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.bottom-nav-fab:hover {
+    transform: scale(1.06);
+    box-shadow: 0 10px 28px rgba(126, 82, 255, 0.65);
+}
+
+/* ===== Desktop Sidebar ===== */
+.desktop-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: #0E0B1A;
+}
+
+.desktop-sidebar {
+    width: 240px;
+    background-color: #141026;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px;
+    position: fixed;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+
+.desktop-sidebar-brand {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 36px;
+    padding-left: 12px;
+}
+
+.desktop-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.desktop-sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: 16px;
+    color: #8C85AA;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.desktop-sidebar-link:hover, .desktop-sidebar-link.active {
+    background-color: #241D42;
+    color: #FFFFFF;
+}
+
+.desktop-sidebar-fab-btn {
+    margin: 16px 0;
+    padding: 12px 16px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #B59BFF 0%, #7E52FF 100%);
+    color: #FFFFFF;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 8px 24px rgba(144, 98, 255, 0.4);
+    text-decoration: none;
+    transition: transform 0.15s ease;
+}
+
+.desktop-sidebar-fab-btn:hover {
+    transform: translateY(-2px);
+    color: #FFFFFF;
+}
+
+@media (max-width: 991px) {
+    .desktop-sidebar {
+        display: none;
+    }
+    .desktop-layout {
+        display: block;
+    }
+}
+
+@media (min-width: 992px) {
+    .app-viewport {
+        max-width: none;
+        width: calc(100% - 260px);
+        min-height: 100vh;
+        margin: 0 0 0 260px;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .bottom-nav {
+        display: none;
+    }
+    .app-main-content {
+        padding-bottom: 24px;
+    }
+}
+
+/* ===== ESTILOS TELA MOVIMENTOS & POPOVER DE MÉTODO ===== */
+.segmented-control-container {
+    background-color: #1A142D;
+    border-radius: 20px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.segmented-control-btn {
+    border: none;
+    background: transparent;
+    color: #8C85AA;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 16px;
+    transition: all 0.15s ease;
+}
+
+.segmented-control-btn.active {
+    background-color: #2D234D;
+    color: #FFFFFF;
+    font-weight: 700;
+}
+
+.method-filter-btn {
+    background-color: #1A142D;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    color: #FFFFFF;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.method-filter-btn:hover {
+    background-color: #251D42;
+}
+
+/* Popover Flutuante Ancorado (Estado 2) */
+.method-popover-dropdown {
+    position: absolute;
+    top: 195px;
+    right: 20px;
+    width: 270px;
+    background-color: #1D1735;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.65);
+    z-index: 1200;
+    padding: 12px 0;
+    animation: fadeIn 0.15s ease-out;
+}
+
+.method-popover-item {
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #8C85AA;
+    font-size: 0.92rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.method-popover-item:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+.method-popover-item.active {
+    color: #FFFFFF;
+    font-weight: 700;
+}
+
+.method-popover-item.active .item-icon {
+    color: #9675FF;
+}
+
+/* Grouped Card por Data */
+.date-group-container {
+    background-color: #1D1735;
+    border-radius: 28px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.date-group-item {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.date-group-item:hover {
+    background-color: #251E44;
+}
+
+.date-group-divider {
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.06);
+    margin: 0 20px;
+}
+
+/* Avatar / Icon Squircle com Badge de Compartilhamento Ciano */
+.category-squircle-wrapper {
+    position: relative;
+    width: 54px;
+    height: 54px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    flex-shrink: 0;
+}
+
+.shared-cyan-badge {
+    position: absolute;
+    bottom: -3px;
+    right: -3px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #00B2FE;
+    border: 2px solid #1D1735;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-size: 0.7rem;
+}
+
+/* ===== ESTILOS TELA EDITAR DESPESA (ESTADO 3) ===== */
+.edit-payer-card {
+    background-color: #1A142D;
+    border: 2px solid transparent;
+    border-radius: 22px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.edit-payer-card.active {
+    border-color: #9675FF;
+    background-color: #251E44;
+}
+
+.edit-pill-btn {
+    background-color: #1A142D;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    color: #8C85AA;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 10px 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.edit-pill-btn.active {
+    background-color: #2D234D;
+    color: #FFFFFF;
+    border-color: #9675FF;
+}
+
+/* ===== TECLADO NUMÉRICO CALCULADORA (BOTTOM SHEET) ===== */
+.keypad-bottom-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 440px;
+    background-color: #19132E;
+    border-radius: 32px 32px 0 0;
+    box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.7);
+    padding: 16px 24px calc(32px + env(safe-area-inset-bottom, 0px)) 24px;
+    z-index: 1300;
+    animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (max-width: 480px) {
+    .keypad-bottom-sheet {
+        max-width: 100%;
+    }
+}
+
+.keypad-handle {
+    width: 42px;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    margin: 0 auto 20px auto;
+}
+
+.keypad-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.keypad-btn {
+    background: transparent;
+    border: none;
+    color: #FFFFFF;
+    font-size: 1.55rem;
+    font-weight: 500;
+    height: 52px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.keypad-btn:hover, .keypad-btn:active {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.keypad-btn.op-btn {
+    color: #9675FF;
+    font-weight: 600;
+    font-size: 1.7rem;
+}
+
+.keypad-action-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.keypad-action-btn {
+    border: none;
+    border-radius: 20px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    height: 54px;
+    cursor: pointer;
+    transition: transform 0.12s ease;
+}
+
+.keypad-action-btn:active {
+    transform: scale(0.96);
+}
+
+.keypad-action-btn.c-btn, .keypad-action-btn.eq-btn {
+    background-color: #241D42;
+    color: #9675FF;
+    flex: 1;
+}
+
+.keypad-action-btn.done-btn {
+    background: linear-gradient(135deg, #7E52FF 0%, #6336E4 100%);
+    color: #FFFFFF;
+    flex: 2.2;
+    box-shadow: 0 6px 20px rgba(126, 82, 255, 0.35);
+}
+
+@keyframes slideUp {
+    from { transform: translate(-50%, 100%); }
+    to { transform: translate(-50%, 0); }
+}
+
+/* ===== CALENDÁRIO MENSAL CARD ===== */
+/* ===== ANALYTICS TABS BAR WITH ACTIVE PURPLE UNDERLINE & NATIVE SMOOTH SCROLL ===== */
+.analytics-tabs-container {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    gap: 26px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0 4px 10px 4px;
+    margin-bottom: 24px;
+    white-space: nowrap;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+.analytics-tabs-container::-webkit-scrollbar {
+    display: none;
+}
+.analytics-tab-item {
+    padding: 6px 2px 10px 2px;
+    color: #8C85AA;
+    font-size: 0.95rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    position: relative;
+    background: transparent;
+    border: none;
+    outline: none;
+    transition: color 0.15s ease;
+    flex-shrink: 0;
+}
+.analytics-tab-item:hover {
+    color: #C0B7E8;
+}
+.analytics-tab-item.active {
+    color: #9675FF;
+}
+.analytics-tab-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: -11px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: #9675FF;
+    border-radius: 3px 3px 0 0;
+    box-shadow: 0 -1px 8px rgba(150, 117, 255, 0.6);
+}
+
+.style-tab-btn {
+    color: #8C85AA;
+    background-color: transparent;
+    font-size: 0.82rem;
+    transition: all 0.15s ease;
+}
+.style-tab-btn.active {
+    color: #FFFFFF !important;
+    background-color: #2B224C !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.calendar-card-container {
+    background-color: #161129;
+    border-radius: 28px;
+    padding: 24px 20px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.calendar-week-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    color: #8C85AA;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.calendar-day-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px 4px;
+}
+
+.calendar-day-cell {
+    min-height: 54px;
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    padding: 4px 2px;
+}
+
+.calendar-day-number {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #FFFFFF;
+}
+
+.calendar-day-net {
+    font-size: 0.65rem;
+    font-weight: 700;
+    margin-top: 2px;
+    letter-spacing: -0.2px;
+}
+
+.calendar-day-net.income {
+    color: #2ED573;
+}
+
+.calendar-day-net.expense {
+    color: #FF5C4D;
+}
+
+.calendar-day-cell.selected {
+    background-color: #9675FF !important;
+    box-shadow: 0 4px 16px rgba(150, 117, 255, 0.4);
+}
+
+.calendar-day-cell.selected .calendar-day-number,
+.calendar-day-cell.selected .calendar-day-net {
+    color: #FFFFFF !important;
+}
+
+.calendar-day-cell.today-outline {
+    border: 2px solid #9675FF;
+    background-color: #21193D;
+}
+
+/* ===== ESTADO VAZIO TRACEJADO ===== */
+.empty-day-dashed-card {
+    border: 2px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 28px;
+    padding: 32px 24px;
+    text-align: center;
+    margin-bottom: 24px;
+    background-color: rgba(255, 255, 255, 0.01);
+}
+
+.dashed-add-day-btn {
+    border: 2px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    padding: 16px 20px;
+    text-align: center;
+    color: #9675FF;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    margin-top: 16px;
+    background-color: rgba(255, 255, 255, 0.01);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.dashed-add-day-btn:hover {
+    border-color: #9675FF;
+    background-color: rgba(150, 117, 255, 0.06);
+}
+
+/* ===== MODAL DESPESA FUTURA (DESFOCADO) ===== */
+.future-expense-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 1500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.future-expense-card {
+    background-color: #1A142E;
+    border-radius: 32px;
+    padding: 36px 24px 28px 24px;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ===== CONFIGURAÇÕES MODERN STYLES ===== */
+.settings-section-header {
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    color: #8C85AA;
+    margin-bottom: 10px;
+    padding-left: 4px;
+}
+
+.settings-card-group {
+    background-color: #161129;
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.settings-item {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    gap: 16px;
+    color: #FFFFFF;
+    text-decoration: none;
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    transition: background-color 0.15s ease;
+    cursor: pointer;
+}
+
+.settings-item:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+    color: #FFFFFF;
+}
+
+.settings-divider {
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.04);
+    margin: 0 20px;
+}
+
+.settings-squircle {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.slider-division-track {
+    position: relative;
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #9675FF 0%, #9675FF 50%, #00B2FE 50%, #00B2FE 100%);
+    display: flex;
+    align-items: center;
+}
+
+.slider-division-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #9675FF;
+    border: 4px solid #161129;
+    box-shadow: 0 0 10px rgba(150, 117, 255, 0.8);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+}
+
+.theme-pill-selector {
+    background-color: #110D20;
+    border-radius: 16px;
+    padding: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.theme-pill-btn {
+    border: none;
+    background: transparent;
+    color: #8C85AA;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+/* ===== SELETOR DE CATEGORIAS EM 2 LINHAS COM SCROLL HORIZONTAL ===== */
+.category-two-rows-container {
+    display: grid;
+    grid-template-rows: repeat(2, 44px);
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    gap: 10px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+    padding: 2px 2px 6px 2px;
+}
+.category-two-rows-container::-webkit-scrollbar {
+    display: none;
+}
+
+.edit-categories-btn {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background-color: #1A142E;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+.edit-categories-btn:hover {
+    background-color: rgba(150, 117, 255, 0.15);
+    border-color: #9675FF;
+}
+
+/* ===== TEMA CLARO (LIGHT MODE) COMPLETO ===== */
+[data-bs-theme="light"],
+[data-theme="light"],
+html.theme-light,
+body.theme-light {
+    --bdd-bg: #F5F4F9;
+    --bdd-bg-deep: #EBE8F3;
+    --bdd-card: #FFFFFF;
+    --bdd-card-hover: #F8F7FC;
+    --bdd-primary: #7E52FF;
+    --bdd-accent: #0284C7;
+    --bdd-success: #16A34A;
+    --bdd-danger: #DC2626;
+    --bdd-text: #18122B;
+    --bdd-muted: #554F73;
+    --bdd-caption: #736D93;
+    --bdd-icon-color: #18122B;
+    --bdd-squircle-bg: #E4DEFC;
+    color-scheme: light !important;
+}
+
+body.theme-light {
+    background-color: var(--bdd-bg) !important;
+    color: var(--bdd-text) !important;
+}
+
+body.theme-light .category-squircle-wrapper i,
+body.theme-light .settings-squircle i,
+body.theme-light .edit-pill-btn i,
+body.theme-light .icon-picker-btn i,
+body.theme-light .theme-icon i,
+body.theme-light .category-icon-span i {
+    color: var(--bdd-icon-color, #18122B) !important;
+}
+
+body.theme-light .category-squircle-wrapper,
+body.theme-light .settings-squircle {
+    background-color: #E4DEFC !important;
+}
+
+body.theme-light .app-viewport {
+    background-color: var(--bdd-bg);
+    box-shadow: 0 12px 60px rgba(0, 0, 0, 0.12), 0 0 0 12px #EBE8F3;
+}
+
+body.theme-light .bottom-nav {
+    background-color: #FFFFFF;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body.theme-light .text-white {
+    color: #18122B !important;
+}
+
+body.theme-light .text-muted,
+body.theme-light [style*="color: #6F688F"],
+body.theme-light [style*="color: #8C85AA"] {
+    color: #554F73 !important;
+}
+
+/* Modais, Bottom Sheets, Cards e Teclado */
+body.theme-light .date-group-container,
+body.theme-light .method-popover-dropdown,
+body.theme-light .calendar-card-container,
+body.theme-light .future-expense-card,
+body.theme-light .settings-card-group,
+body.theme-light .keypad-bottom-sheet,
+body.theme-light .modal-content,
+body.theme-light .card:not(.bg-dark) {
+    background-color: #FFFFFF !important;
+    color: #18122B !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08) !important;
+}
+
+body.theme-light .date-group-divider,
+body.theme-light .settings-divider {
+    background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Filtros de Método, Popovers e Status */
+body.theme-light .method-filter-btn {
+    background-color: #FFFFFF !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
+    color: #18122B !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+body.theme-light .method-filter-btn:hover {
+    background-color: #F4F0FF !important;
+}
+
+body.theme-light .method-popover-dropdown {
+    background-color: #FFFFFF !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15) !important;
+}
+
+body.theme-light .method-popover-item {
+    color: #554F73 !important;
+}
+
+body.theme-light .method-popover-item:hover {
+    background-color: #F4F0FF !important;
+    color: #7E52FF !important;
+}
+
+body.theme-light .method-popover-item.active {
+    color: #7E52FF !important;
+    background-color: #E4DEFC !important;
+    font-weight: 700 !important;
+}
+
+/* Cards "QUEM PAGOU?", "CATEGORIA", "MÉTODO", "CALENDÁRIO", "ANEXOS" */
+body.theme-light .edit-payer-card {
+    background-color: #F4F0FF !important;
+    border-color: rgba(126, 82, 255, 0.15) !important;
+}
+
+body.theme-light .edit-payer-card .text-white,
+body.theme-light .edit-payer-card span {
+    color: #18122B !important;
+    font-weight: 700 !important;
+}
+
+body.theme-light .edit-payer-card.active {
+    background-color: #E4DEFC !important;
+    border-color: #7E52FF !important;
+}
+
+body.theme-light .edit-pill-btn,
+body.theme-light .edit-categories-btn {
+    background-color: #F4F0FF !important;
+    border-color: rgba(126, 82, 255, 0.15) !important;
+    color: #18122B !important;
+}
+
+body.theme-light .edit-pill-btn.active {
+    background-color: #7E52FF !important;
+    color: #FFFFFF !important;
+    border-color: #7E52FF !important;
+}
+
+/* Segmented Controls (Controle Despesas/Rendas/Pago/Pendente) */
+body.theme-light .segmented-control-container {
+    background-color: #EBE7F7 !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+body.theme-light .segmented-control-btn {
+    color: #554F73 !important;
+}
+
+body.theme-light .segmented-control-btn.active {
+    background-color: #7E52FF !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 12px rgba(126, 82, 255, 0.3) !important;
+}
+
+/* Campos de Formulário, Date Pickers, Selects e Anexos */
+body.theme-light .form-control,
+body.theme-light .form-select,
+body.theme-light input[type="text"],
+body.theme-light input[type="number"],
+body.theme-light input[type="date"],
+body.theme-light select {
+    background-color: #F8F7FC !important;
+    color: #18122B !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    color-scheme: light !important;
+}
+
+body.theme-light input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: none !important;
+}
+
+body.theme-light input::placeholder {
+    color: #8C85AA !important;
+}
+
+/* Teclado Calculadora */
+body.theme-light .keypad-bottom-sheet {
+    background-color: #FFFFFF !important;
+    box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.15) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+body.theme-light .keypad-handle {
+    background-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+body.theme-light .keypad-btn {
+    color: #18122B !important;
+}
+
+body.theme-light .keypad-btn:hover,
+body.theme-light .keypad-btn:active {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+body.theme-light .keypad-action-btn.c-btn,
+body.theme-light .keypad-action-btn.eq-btn {
+    background-color: #E4DEFC !important;
+    color: #7E52FF !important;
+}
+
+/* Calendário */
+body.theme-light .calendar-day-number {
+    color: #18122B !important;
+}
+
+body.theme-light .calendar-day-cell.today-outline {
+    border-color: #7E52FF !important;
+    background-color: #E4DEFC !important;
+}
+
+/* Modais e Backdrop */
+body.theme-light .modal-content {
+    background-color: #FFFFFF !important;
+    color: #18122B !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+body.theme-light .modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+body.theme-light .btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(20%) !important;
+}
+
+/* Estilos Inline Sobrescritos para Modo Claro */
+body.theme-light [style*="background-color: #161129"],
+body.theme-light [style*="background-color:#161129"],
+body.theme-light [style*="background-color: #1D1735"],
+body.theme-light [style*="background-color:#1D1735"],
+body.theme-light [style*="background-color: #1F1A3A"],
+body.theme-light [style*="background-color: #1F1A3C"],
+body.theme-light [style*="background-color: #1F1A35"],
+body.theme-light [style*="background-color: #2D234D"] {
+    background-color: #FFFFFF !important;
+    color: #18122B !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+body.theme-light [style*="background-color: #2D234D"] select,
+body.theme-light [style*="background-color: #2D234D"] input {
+    background-color: #F4F0FF !important;
+    color: #18122B !important;
+}
+
+/* ===== Seletor de Tema (Segmented Control Instantâneo & Responsivo) ===== */
+.theme-pill-selector {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    padding: 4px;
+    gap: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+body.theme-light .theme-pill-selector {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+.theme-pill-btn {
+    border: none;
+    background: transparent;
+    color: var(--bdd-muted);
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    outline: none;
+    flex: 1;
+    text-align: center;
+}
+
+.theme-pill-btn:hover {
+    color: var(--bdd-text);
+}
+
+.theme-pill-btn.active {
+    background-color: var(--bdd-primary);
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 12px rgba(150, 117, 255, 0.35);
+    font-weight: 700;
+}
+
+
+
+/* ===== Layout Desktop & Dimensão Estrita dos Logos BDD ===== */
+.desktop-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--bdd-bg-deep);
+}
+
+.desktop-sidebar {
+    width: 260px;
+    background-color: var(--bdd-card);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 991px) {
+    .desktop-sidebar {
+        display: none !important;
+    }
+}
+
+.desktop-sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+    padding: 0 8px;
+}
+
+.sidebar-brand-logo {
+    width: 36px !important;
+    height: 36px !important;
+    max-width: 36px !important;
+    max-height: 36px !important;
+    object-fit: contain;
+    flex-shrink: 0;
+    border-radius: 8px;
+}
+
+.mobile-brand-logo {
+    width: 32px !important;
+    height: 32px !important;
+    max-width: 32px !important;
+    max-height: 32px !important;
+    object-fit: contain;
+    flex-shrink: 0;
+    border-radius: 8px;
+}
+
+.sidebar-brand-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-brand-name {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--bdd-text);
+    line-height: 1.2;
+}
+
+.sidebar-brand-tag {
+    font-size: 0.72rem;
+    color: var(--bdd-muted);
+}
+
+.desktop-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.desktop-sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    color: var(--bdd-muted);
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 14px;
+    transition: all 0.2s ease;
+}
+
+.desktop-sidebar-link:hover, .desktop-sidebar-link.active {
+    background-color: var(--bdd-card-hover);
+    color: var(--bdd-primary);
+}
+
+.desktop-sidebar-fab-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #9675FF 0%, #7E52FF 100%);
+    color: #FFFFFF;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 12px 20px;
+    border-radius: 16px;
+    margin: 12px 0;
+    box-shadow: 0 4px 14px rgba(150, 117, 255, 0.4);
+    transition: all 0.2s ease;
+}
+
+.desktop-sidebar-fab-btn:hover {
+    transform: translateY(-1px);
+    color: #FFFFFF;
+}
+
+.mobile-brand-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    background-color: var(--bdd-card);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mobile-brand-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-brand-name {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--bdd-text);
+    line-height: 1.1;
+}
+
+.mobile-brand-tag {
+    font-size: 0.68rem;
+    color: var(--bdd-muted);
+}
+
+
+
+
+

