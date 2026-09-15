@@ -20,6 +20,7 @@ function getPool() {
       dateStrings: false,
       decimalNumbers: true,
       supportBigNumbers: true,
+      ssl: config.db.ssl,
     });
   }
   return pool;

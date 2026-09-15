@@ -11,6 +11,7 @@ const config = {
     user: process.env.DB_USER || 'bdd',
     password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME || 'bdd',
+    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
   },
 
   jwt: {
