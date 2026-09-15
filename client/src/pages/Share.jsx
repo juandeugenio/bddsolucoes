@@ -45,6 +45,7 @@ export default function Share() {
   };
 
   const revoke = async (id) => {
+    if (!window.confirm('Revogar este convite? O link deixará de funcionar.')) return;
     try {
       await api.post(`/tenants/invites/${id}/revoke`);
       showToast('Convite revogado');
