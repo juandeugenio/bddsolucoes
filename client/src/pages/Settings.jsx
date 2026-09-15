@@ -184,6 +184,18 @@ export default function Settings() {
         )}
 
         <div className="settings-divider" />
+        <a href="/share" className="settings-item" style={{ textDecoration: 'none' }}>
+          <div className="settings-squircle" style={{ backgroundColor: '#2D234D', color: '#22C55E' }}>
+            <PhosphorIcon name="user-plus" size={20} />
+          </div>
+          <div className="flex-grow-1">
+            <div className="fw-semibold text-white">Convidar cônjuge por e-mail</div>
+            <div className="small" style={{ color: '#8C85AA' }}>Adicione seu parceiro(a) para compartilhar o espaço</div>
+          </div>
+          <PhosphorIcon name="caret-right" size={16} style={{ color: '#6F688F' }} />
+        </a>
+
+        <div className="settings-divider" />
         <div className="settings-item" style={{ cursor: 'pointer' }} onClick={toggleNotifications}>
           <div className="settings-squircle" style={{ backgroundColor: '#2D234D', color: '#9675FF' }}>
             <PhosphorIcon name="share-network" size={20} />
